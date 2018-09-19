@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SphereGeometry</title>
+    <script src="../build/three.js">
+    </script>
+</head>
+<body>
+    <canvas id="mainCanvas" width="400px" height="300px"></canvas>
+    <canvas id="subCanvas" width="400px" height="300px"></canvas>
+    <canvas id="threeCanvas" width="400px" height="300px"></canvas>
+    <canvas id="fourCanvas" width="400px" height="300px"></canvas>
+    <canvas id="fiveCanvas" width="400px" height="300px"></canvas>
+    <canvas id="sixCanvas" width="400px" height="300px"></canvas>
+    <canvas id="sevenCanvas" width="400px" height="300px"></canvas>
+</body>
+<script>
+    function init() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('mainCanvas')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4, 4, -3, 3, 1, 10);
+        camera.position.set(0,0,5);
+        // camera.position.set(4, 4, 5);
+        //camera.lookAt(0, 0, 0);
+        scene.add(camera);
+        var sphere = new THREE.Mesh(new THREE.SphereGeometry(3, 18, 12),
+            new THREE.MeshBasicMaterial(
+                {
+                    color: 0x00ff00,
+                    wireframe: true
+                }
+            ));
+        scene.add(sphere);
+        renderer.render(scene, camera);
+    }
+    init();
+    // 经度切分
+    function init1(){
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('subCanvas')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4, 4, -3, 3, 1, 10);
+        camera.position.set(4, 4, 5);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+        scene.add(camera);
+        var sphere = new THREE.Mesh(new THREE.SphereGeometry(3, 8 , 6, Math.PI/6, Math.PI/3),
+            new THREE.MeshBasicMaterial({
+                color: 0x0000ff,
+                wireframe: true
+            }));
+        scene.add(sphere);
+        renderer.render(scene, camera);
+    }
+    init1();
+    // 纬度切分
+    function init2() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('threeCanvas')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4, 4, -3, 3, 1, 10);
+        camera.position.set(4,4,5);
+        camera.lookAt(0,0,0);
+        scene.add(camera);
+        var sphere = new THREE.Mesh(new THREE.SphereGeometry(3, 8, 6, 0, Math.PI*2, Math.PI/6, Math.PI/3),
+            new THREE.MeshBasicMaterial({
+                color: 0xff00ff,
+                wireframe: true
+            }));
+        scene.add(sphere);
+        renderer.render(scene, camera);
+    }
+    init2();
+    // 经度和纬度切分
+    function init3() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('fourCanvas')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4, 4, 3, -3, 1, 10);
+        camera.position.set(0,0,5);
+        // camera.position.set(4,4,5);
+        // camera.lookAt(0,0,0);
+        scene.add(camera);
+        var sphere = new THREE.Mesh(new THREE.SphereGeometry(3, 8, 6, Math.PI/2, Math.PI, Math.PI/6, Math.PI/2),
+            new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                wireframe: true
+            }));
+        scene.add(sphere);
+        renderer.render(scene, camera);
+    }
+    init3();
+
+    // 圆形
+    function init4() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('fiveCanvas')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4,4,3,-3,1,10);
+        camera.position.set(0,0,5);
+        scene.add(camera);
+        var circle = new THREE.Mesh(new THREE.CircleGeometry(3,18,Math.PI/3,Math.PI/3 *4),
+            new THREE.MeshBasicMaterial({
+                color: 0xcc00cc,
+                wireframe: true
+            }));
+        scene.add(circle);
+        renderer.render(scene, camera);
+    }
+    init4();
+    // 圆柱体
+    function init5() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('sixCanvas')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4,4,-3,3,1,10);
+       // camera.position.set(0,0,5);
+        camera.position.set(4,4,5);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+        scene.add(camera);
+        var cylinder = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 4, 18, 3),
+            new THREE.MeshBasicMaterial({
+                color: 0x0000ff,
+                wireframe: true
+            }));
+        scene.add(cylinder);
+        renderer.render(scene, camera);
+    }
+    init5();
+    function init6() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('sevenCanvas')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4,4,3,-3,1,10);
+        // camera.position.set(0,0,5);
+        camera.position.set(4,4,5);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+        scene.add(camera);
+        // var cylinder = new THREE.Mesh(new THREE.CylinderGeometry(2, 3, 4, 18, 3),
+        //     new THREE.MeshBasicMaterial({
+        //         color: 0x0000ff,
+        //         wireframe: true
+        //     }));
+        // 无顶面
+        var cylinder = new THREE.Mesh(new THREE.CylinderGeometry(2, 3, 4, 18, 3, true),
+            new THREE.MeshBasicMaterial({
+                color: 0x0000ff,
+                wireframe: true
+            }));
+        scene.add(cylinder);
+        renderer.render(scene, camera);
+    }
+    init6();
+</script>
+</html>

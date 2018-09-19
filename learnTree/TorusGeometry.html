@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TorusGeometry</title>
+    <script src="../build/three.js"></script>
+</head>
+<body>
+    <canvas id="first" width="400px" height="300px"></canvas>
+    <canvas id="second" width="400px" height="300px"></canvas>
+    <canvas id="three" width="400px" height="300px"></canvas>
+</body>
+</body>
+<script>
+    function init() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('first')
+        });
+        var scene = new THREE.Scene();
+        var camera = new  THREE.OrthographicCamera(-8,8,-6,6,1,10);
+        camera.position.set(4,4,5);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+        scene.add(camera);
+        var torus = new THREE.Mesh(new THREE.TorusGeometry(3, 1, 16, 18),
+            new THREE.MeshBasicMaterial({
+                color: 0xeeeee,
+                wireframe: true
+            }));
+        scene.add(torus);
+        renderer.render(scene, camera);
+    }
+    init();
+    function init2() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('second')
+        });
+        var scene = new THREE.Scene();
+        var camera = new  THREE.OrthographicCamera(-8,8,-6,6,1,10);
+        camera.position.set(4,4,5);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+        scene.add(camera);
+        var torus = new THREE.Mesh(new THREE.TorusGeometry(3, 1, 16, 18,Math.PI),
+            new THREE.MeshBasicMaterial({
+                color: 0xeeeee,
+                wireframe: true
+            }));
+        scene.add(torus);
+        renderer.render(scene, camera);
+    }
+    init2();
+    function init3() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('three')
+        });
+        var scene = new THREE.Scene();
+        var camera = new  THREE.OrthographicCamera(-8,8,-6,6,1,10);
+        camera.position.set(4,4,5);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+        scene.add(camera);
+        var torus = new THREE.Mesh(new THREE.TorusKnotGeometry(3, 1, 36, 14),
+            new THREE.MeshBasicMaterial({
+                color: 0xeeeee,
+                wireframe: true
+            }));
+        scene.add(torus);
+        renderer.render(scene, camera);
+    }
+    init3();
+</script>
+</html>

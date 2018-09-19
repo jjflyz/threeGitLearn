@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TextGeometry</title>
+    <script src="../build/three.js"></script>
+</head>
+<body>
+<canvas id="one" width="400px" height="300px"></canvas>
+<canvas id="two" width="400px" height="300px"></canvas>
+</body>
+<script>
+    function init() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('one')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4, 4, 3, -3, 1, 10);
+        camera.position.set(5, 1, 5);
+        camera.lookAt(new THREE.Vector3(3, 0, 0));
+        scene.add(camera);
+        // var light = new THREE.DirectionalLight(0xffffff);
+        // light.position.set(-5, 10, 5);
+        // scene.add(light);
+        var loader = new THREE.FontLoader();
+        loader.load('../build/helvetiker_regular.typeface.json', function (font) {
+            var text = new THREE.Mesh(new THREE.TextGeometry('duros', {
+                font: font,
+                size: 2,
+                height: 1
+            }), new THREE.MeshBasicMaterial({
+                color: 0xff0000
+            }));
+            scene.add(text);
+            renderer.render(scene, camera);
+        });
+    }
+    init();
+    function init1() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('two')
+        });
+        var scene = new THREE.Scene();
+        var camera = new THREE.OrthographicCamera(-4, 4, 3, -3, 1, 10);
+        camera.position.set(5, 1, 5);
+        camera.lookAt(new THREE.Vector3(3, 0, 0));
+        scene.add(camera);
+        //金属发亮物体
+        var material = new THREE.MeshPhongMaterial({
+            color: 0xffff00,
+            specular:0xffff00,
+            //指定该材质的光亮程度及其高光部分的颜色，如果设置成和color属性相同的颜色，则会得到另一个更加类似金属的材质，如果设置成grey灰色，则看起来像塑料
+            shininess:0
+            //指定高光部分的亮度，默认值为30
+        });
+
+        //方向光
+        var light = new THREE.DirectionalLight(0xffffff);
+        light.position.set(-5, 10, 5);
+        scene.add(light);
+        var loader = new THREE.FontLoader();
+        loader.load('../build/helvetiker_regular.typeface.json', function (font) {
+            var text = new THREE.Mesh(new THREE.TextGeometry('duros', {
+                font: font,
+                size: 2,
+                height: 1
+            }), material);
+            scene.add(text);
+            renderer.render(scene, camera);
+        });
+    }
+
+    init1();
+</script>
+</html>

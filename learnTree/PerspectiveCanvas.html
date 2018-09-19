@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../build/three.js"></script>
+</head>
+<body>
+<canvas id="mainCanvas" width="400px" height="300px"></canvas>
+</body>
+<script>
+    function init() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('mainCanvas')
+        });
+        var sence = new THREE.Scene();
+        // var camera = new THREE.PerspectiveCamera(45, 4/3, 1,10);
+        var camera = new THREE.PerspectiveCamera(60, 4/3, 1, 10);
+        camera.position.set(0, 0, 5);
+        sence.add(camera);
+
+        var cube = new THREE.Mesh(
+            new THREE.CubeGeometry(1,1,1),
+            new THREE.MeshBasicMaterial({
+                color: 0xff0000,
+                wireframe: true
+            })
+        )
+        sence.add(cube);
+        renderer.render(sence, camera);
+    }
+    init();
+</script>
+</html>

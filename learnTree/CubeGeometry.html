@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CubeGeometry</title>
+    <script src="../build/three.js"></script>
+</head>
+<body>
+    <canvas id="mainCanvas" width="400px" height="300px"></canvas>
+</body>
+<script>
+    function init() {
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('mainCanvas')
+        });
+        var sence = new THREE.Scene();
+
+        var camera = new THREE.OrthographicCamera(-4, 4, -3, 3, 1, 10);
+        camera.position.set(4,-3,5);
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+        sence.add(camera);
+        // cubeGeometry() 后三个参数说明：主要是对几何体边的分段，不涉及体内分段
+        // var cube = new THREE.Mesh(new THREE.CubeGeometry(1, 2, 3),
+        //     new THREE.MeshBasicMaterial({
+        //         color: 0xff0000,
+        //         wireframe: true
+        //     }));
+        var cube = new THREE.Mesh(new THREE.CubeGeometry(1, 2, 3, 2, 2, 3),
+            new THREE.MeshBasicMaterial({
+                color: 0xff0000,
+                wireframe: true
+            }));
+        sence.add(cube);
+
+        renderer.render(sence, camera);
+
+    }
+    init();
+</script>
+</html>

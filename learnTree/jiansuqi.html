@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../build/three.js"></script>
+    <script type="text/javascript" src="../examples/js/loaders/OBJLoader.js"></script>
+    <script type="text/javascript" src="../examples/js/loaders/STLLoader.js"></script>
+    <script src="../examples/js/renderers/CanvasRenderer.js"></script>
+    <script src="../examples/js/controls/OrbitControls.js"></script>
+</head>
+<body onload="init()">
+
+</body>
+<script>
+    var scene = null;
+    var camera = null;
+    var renderer = null;
+
+    var mesh = null;
+    var id = null;
+    var control = null;
+    var axisHelp = null;
+    function init() {
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0xcccccc);//画布颜色
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        scene = new THREE.Scene();//创建场景
+        axisHelp = new THREE.AxisHelper(400);
+        scene.add(axisHelp);
+        camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, -window.innerHeight / 2, window.innerHeight / 2, 0.1, 100000000000000000000000);
+        camera.position.set(0,0, -10);
+        // camera.lookAt(new THREE.Vector3(0, 0, 0));
+        camera.up.x = 0;
+        camera.up.y = 0;
+        camera.up.z = 1;
+        // camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
+        scene.add(camera);//把相机添加到场景中
+        var loader = new THREE.OBJLoader();//在init函数中，创建loader变量，用于导入模型
+        loader.load('./asm_me.obj', function(obj) {//第一个表示模型路径，第二个表示完成导入后的回调函数，一般我们需要在这个回调函数中将导入的模型添加到场景中;
+            obj.traverse(function(child) {
+                if (child instanceof THREE.Mesh) {
+                    console.log(child);
+                    // child = new THREE.Mesh(child.geometry, new THREE.MeshLambertMaterial({color: 0xff0000}));
+                   // child.material = new THREE.MeshLambertMaterial({color: 0xffffff});
+                    child.scale.set(0.03,0.03,0.03)
+                }
+                if (child.name === "1") {
+                    // child.material = new THREE.MeshLambertMaterial({color: 0xff0000});
+                    // child.position.set(0,-100,0);
+                    var matrix = new THREE.Matrix4;
+                    matrix.setPosition(new THREE.Vector3(10,100,50));
+                    child.modelViewMatrix = matrix;
+                    child.position.set(10,-100,50);
+                    console.log('matrix');
+                    console.log(child.matrix);
+                    console.log("matrixWorld");
+                    console.log(child.matrixWorld);
+                    console.log('modelViewMatrix');
+                    console.log(child.modelViewMatrix);
+                    console.log('normalMatrix');
+                    console.log(child.normalMatrix);
+                }
+                if(child.name === '2') {
+                    child.material = new THREE.MeshPhongMaterial({color: 0x0000ff});
+                    child.position.set(0,0,200);
+                }
+                if(child.name === '3') {
+                     child.material = new THREE.MeshPhongMaterial({color: 0x00ff00});
+                    child.position.set(0,0,-200);
+                }
+                if(child.name === '4') {
+                    child.material = new THREE.MeshPhongMaterial({color: 0x00ff00});
+                    child.position.set(200,0,0);
+                }
+            });
+            // // 模型座标
+            // mesh = obj;//储存到全局变量中
+            // mesh.position.x = 0;
+            // mesh.position.y = 0;
+            // mesh.position.z = 0;
+            // // mesh.children[0].geometry.boundingSphere.center(new THREE.Vector3(0,0,0));
+            // scene.add(obj);//将导入的模型添加到场景中
+            // var m = new THREE.MeshLambertMaterial({color: 0x5c3A21});
+            // obj.children.forEach((child) => {
+            //     if(child.children.length == 1) {
+            //         if(child.children[0] instanceof THREE.Mesh) {
+            //             child.children[0].materail = material;
+            //         }
+            //     }
+            // })
+           // obj.scale.set(0.03,0.03,0.03);
+            scene.add(obj);
+        });
+        var light = new THREE.DirectionalLight(0xffffff);//光源颜色
+        // var light = new THREE.AmbientLight(0x555ff4);
+        light.position.set(-200, 100, 100);//光源位置
+        scene.add(light);//光源添加到场景中
+
+        control = new THREE.OrbitControls(camera, document.body);
+        id = setInterval(draw, 10);//每隔20ms重绘一次
+    }
+    function draw() {//们在重绘函数中让茶壶旋转：
+        // window.requestAnimationFrame(draw);
+        renderer.render(scene, camera);//调用WebGLRenderer的render函数刷新场景
+        control.update();
+    }
+</script>
+</html>

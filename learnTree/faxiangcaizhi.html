@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>法向材质</title>
+    <script src="../build/three.js"></script>
+</head>
+<body>
+<canvas id="first" width="400px" height="300px"></canvas>
+</body>
+<script>
+    function init() {
+        var scene = new THREE.Scene();
+        var renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('first')
+        });
+       // renderer.setClearColor(new THREE.Color(0xffffff));
+        var camera = new THREE.PerspectiveCamera(50, 4/3, 1, 10);
+        camera.position.set(4,4,5);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+        scene.add(camera);
+        var cube = new THREE.CubeGeometry(2,2,2);
+        var cubeMaterial = new THREE.MeshNormalMaterial();
+        var cubeMesh = new THREE.Mesh(cube, cubeMaterial);
+
+        scene.add(cubeMesh);
+        renderer.render(scene, camera);
+
+    }
+    init();
+</script>
+</html>

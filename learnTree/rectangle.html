@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rectangle</title>
+    <script src="../build/three.js"></script>
+</head>
+<body>
+    <canvas id="mainCanvas" width="400px" height="300px"></canvas>
+</body>
+<script>
+    function init() {
+        // render
+        var render = new THREE.WebGLRenderer({
+            canvas:document.getElementById('mainCanvas')
+        });
+        // bg-color
+        render.setClearColor(0x000000);
+        // scene
+        var scene = new THREE.Scene();
+
+        // camera
+        var camera = new THREE.PerspectiveCamera(45, 4/3, 1, 1000);
+        camera.position.set(0, 0, 5);
+        scene.add(camera);
+        // cube in the scene
+        var cube = new THREE.Mesh(new THREE.CubeGeometry(1, 2, 3),
+                  new THREE.MeshBasicMaterial({
+                      color: 0xff0000
+                  })
+        );
+
+        scene.add(cube);
+
+        //render
+         render.render(scene, camera);
+    }
+    init();
+</script>
+</html>
