@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../build/three.js"></script>
+    <script type="text/javascript" src="../examples/js/loaders/OBJLoader.js"></script>
+    <script type="text/javascript" src="../examples/js/loaders/STLLoader.js"></script>
+    <script src="../examples/js/renderers/CanvasRenderer.js"></script>
+    <script src="../examples/js/controls/OrbitControls.js"></script>
+</head>
+<body onload="init()">
+
+</body>
+<script>
+    var scene = null;
+    var camera = null;
+    var renderer = null;
+
+    var mesh = null;
+    var id = null;
+    var control = null;
+    var axisHelp = null;
+
+    function init() {
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0xcccccc);//画布颜色
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        scene = new THREE.Scene();//创建场景
+        axisHelp = new THREE.AxisHelper(400);
+        scene.add(axisHelp);
+        camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, -window.innerHeight / 2, window.innerHeight / 2, 0.1, 100000000000000000000000);
+        camera.position.set(0, 0, -10);
+        // camera.lookAt(new THREE.Vector3(0, 0, 0));
+        camera.up.x = 0;
+        camera.up.y = 0;
+        camera.up.z = 1;
+        // camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
+        scene.add(camera);//把相机添加到场景中
+        function position(radius, count, key) {
+            //周长
+            var circleLength = 2 * radius * Math.PI;
+            var hudu = circleLength / count;
+            var jiaodu = hudu / radius * key;
+            console.log(jiaodu);
+            var x = radius * Math.cos(jiaodu);
+            var y = radius * Math.sin(jiaodu);
+            return {
+                _x: x,
+                _y: y
+            }
+        }
+
+        function countxyz(geometry) {
+            let x = (geometry.boundingBox.max.x - geometry.boundingBox.min.x) / 2;
+            let y = (geometry.boundingBox.max.y - geometry.boundingBox.min.y) / 2;
+            let z = (geometry.boundingBox.max.z - geometry.boundingBox.min.z) / 2;
+            let oldPositionRadius = {
+                x: x,
+                y: y,
+                Z: z,
+                radius: 50
+            }
+            return oldPositionRadius;
+        }
+
+        var position = {
+            _x: 0,
+            _y: 0,
+            _Z: 0
+        };
+
+        function explore(obj, geometry) {
+            // xoy平面
+            //let xyz = countxyz(geometry);
+            var bili = 0.03;
+            let x = +geometry.boundingSphere.center.x * bili;
+            let y = +geometry.boundingSphere.center.y * bili;
+            let z = +geometry.boundingSphere.center.z * bili;
+            let radius = +geometry.boundingSphere.radius * bili;
+            // console.log(radius);
+            // let x = xyz.x;
+            // let y = xyz.y;
+            // let z = xyz.z;
+            // let radius = xyz.radius;
+            // let plane = new THREE.Mesh(new THREE.PlaneG)
+            const d = 10;
+            if (+x > 0) {
+                position._x += d + radius;
+                return;
+            } else {
+                position._x += -Math.abs(d + radius);
+                return;
+            }
+            if (+y > 0) {
+                position._y += d + radius;
+                return;
+            } else {
+                position._y += -Math.abs(d + radius);
+                return;
+            }
+            if (+z > 0) {
+                position._z += d + radius;
+                return;
+            } else {
+                position._z += -Math.abs(d + radius);
+                return;
+            }
+        }
+
+        var record = [];
+        var position_x = 10;
+        var loader = new THREE.OBJLoader();//在init函数中，创建loader变量，用于导入模型
+        loader.load('./asm_me.obj', function (obj) {//第一个表示模型路径，第二个表示完成导入后的回调函数，一般我们需要在这个回调函数中将导入的模型添加到场景中;
+                var childcounts = obj.children.length;
+                // 计算位置
+                for (let i = 0; i < obj.children.length; i++) {
+                    let child = obj.children[i];
+                    if (child instanceof THREE.Mesh) {
+                        //console.log(child);
+                        // child = new THREE.Mesh(child.geometry, new THREE.MeshLambertMaterial({color: 0xff0000}));
+                        // child.material = new THREE.MeshLambertMaterial({color: 0xffffff});
+                        child.geometry.computeBoundingBox();
+                        child.geometry.computeBoundingSphere();
+                        let maxRadius = obj.children[0].geometry.boundingSphere.radius;
+                        setTimeout(null, 10);
+                        child.scale.set(0.03, 0.03, 0.03);
+                        // console.log(child.geometry.boundingSphere);
+                        //explore(null, child.geometry);
+                        // console.log(position._x*0.03);
+                        // child.position.set(xyz._x,xyz._y, xyz._z);
+                        //child.position.set(position._x,position._y,position._z);
+                        // console.log(child.geometry.boundingSphere.radius);
+                        // scene.add(sphere);
+                        let radius = child.geometry.boundingSphere.radius * 0.03;
+                        let center = child.geometry.boundingSphere.center;
+                        record.push({radius: radius, center: center});
+                        let xyzP = {
+                            x: 0,
+                            y: 0,
+                            z: 0
+                        };
+                        let d = 10;
+
+                        //console.log(i);
+
+                        function twoPointDistance3D(p1, p2) {
+                            let i = Math.sqrt((p1.x - p2.x) * (p1.x - p2.x)
+                                + (p1.y - p2.y) * (p1.y - p2.y)
+                                + (p1.z - p2.z) * (p1.z - p2.z));
+                            return i;
+                        }
+
+                        let num = 0;
+                        // let centerx =(child.geometry.boundingBox.max.x + child.geometry.boundingBox.min.x ) / 2;
+                        // let centery =(child.geometry.boundingBox.max.y + child.geometry.boundingBox.min.y ) / 2;
+                        // let centerz =(child.geometry.boundingBox.max.z +child.geometry.boundingBox.min.z ) / 2;
+                        //child.geometry.center();
+                        // obj.children[0].position.set(0, 100, 0);
+
+                        if (center.z > 0) {
+                            xyzP.z = radius + d + maxRadius * 0.03 / 2;
+                            xyzP.x = center.x * 0.03;
+                            xyzP.y = center.y * 0.03;
+                            let cirecled= 0;
+                            if (record.length >= 1) {
+                                if (record[i - 1].radius + radius >= twoPointDistance3D(record[i - 1].center, center)) {
+                                    //child.position.set(xyzP.x, xyzP.y, xyzP.z);
+                                    var sphere = new THREE.Mesh(new THREE.SphereGeometry(child.geometry.boundingSphere.radius * 0.03, 8, 8),
+                                        new THREE.MeshBasicMaterial({
+                                            color: 0xffff00 * Math.random(),
+                                            wireframe: true
+                                        }));
+                                    child.geometry.center();
+                                    child.position.set(xyzP.x, xyzP.y, xyzP.z);
+                                    sphere.position.set(xyzP.x, xyzP.y, xyzP.z);
+                                    scene.add(sphere);
+                                } else {
+                                    //child.position.set(xyzP.x, xyzP.y, xyzP.z);
+                                    for(let j= 0;j<record.length;j++){
+                                        //console.log('dsfsdf');
+                                        if (record[j].radius + radius <= twoPointDistance3D(record[j].center, center)){
+                                            // for(;;){
+                                            //     cirecled = twoPointDistance3D(record[i].center, center)
+                                            //     if(record[i].radius + radius >= cirecled){
+                                            //         break;
+                                            //     }
+                                            // }
+                                            console.log('dsfsdf');
+                                            // xyzP.z += (record[j].radius + radius)*0.03/2;
+                                            //child.geometry.center();
+                                            child.position.set(xyzP.x, xyzP.y, xyzP.z+100);
+                                            break;
+                                        } else {
+                                           // child.position.set(xyzP.x, xyzP.y, xyzP.z);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // if(child.name === '1'){
+                        //     var sphere = new THREE.Mesh(new THREE.SphereGeometry(child.geometry.boundingSphere.radius*0.03, 10, 10),
+                        //         new THREE.MeshBasicMaterial({
+                        //             color: 0xffff00 * Math.random(),
+                        //             wireframe: true
+                        //         }));
+                        //     child.position.set(0, 500, 0);
+                        //     sphere.position.set(0, 500, 0);
+                        //     scene.add(sphere);
+                        // }
+                        // if (center.x > 0) {
+                        //     xyzP.x = radius + d;
+                        //     xyzP.z = center.z*0.03;
+                        //     xyzP.y = center.y*0.03;
+                        //     child.position.set(xyzP.x,xyzP.y,xyzP.z);
+                        // }
+                        // if (center.y > 0) {
+                        //     xyzP.y = radius + d;
+                        //     xyzP.z = center.z*0.03;
+                        //     xyzP.x = center.x*0.03;
+                        //     console.log(Math.abs(record[i].radius) + Math.abs(radius)>twoPointDistance3D(record[i].center, center))
+                        // }
+                    }
+                }
+                scene.add(obj);
+            }
+        )
+        ;
+        var light = new THREE.DirectionalLight(0xffffff);//光源颜色
+        // var light = new THREE.AmbientLight(0x555ff4);
+        light.position.set(-200, 100, 100);//光源位置
+        scene.add(light);//光源添加到场景中
+        control = new THREE.OrbitControls(camera, document.body);
+        id = setInterval(draw, 10);//每隔20ms重绘一次
+    }
+
+    function draw() {//们在重绘函数中让茶壶旋转：
+        // window.requestAnimationFrame(draw);
+        renderer.render(scene, camera);//调用WebGLRenderer的render函数刷新场景
+        control.update();
+    }
+</script>
+</html>
