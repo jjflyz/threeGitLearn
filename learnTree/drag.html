@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+
+        canvas {
+            display: block;
+        }
+
+    </style>
+</head>
+<body onload="draw();">
+
+</body>
+<script src="https://johnson2heng.github.io/three.js-demo/lib/three.js"></script>
+<script src="https://johnson2heng.github.io/three.js-demo/lib/js/controls/OrbitControls.js"></script>
+<script src="https://johnson2heng.github.io/three.js-demo/lib/js/libs/stats.min.js"></script>
+<script src="https://johnson2heng.github.io/three.js-demo/lib/js/libs/dat.gui.min.js"></script>
+<script type="text/javascript" src="../examples/js/loaders/OBJLoader.js"></script>
+<script src="../build/three.module.js"></script>
+<script src="../examples/js/renderers/Projector.js"></script>
+<script src="../examples/js/controls/DragControls.js"></script>
+<script>
+    var renderer;
+
+    function initRender() {
+        // renderer = new THREE.WebGLRenderer({antialias: true,alpha:true});
+        // renderer.setSize(window.innerWidth, window.innerHeight);
+        // //告诉渲染器需要阴影效果
+        // //renderer.shadowMap.enabled = true;
+        // //renderer.shadowMap.type = THREE.PCFSoftShadowMap; // 默认的是，没有设置的这个清晰 THREE.PCFShadowMap
+        // renderer.setClearColor(0xffffff);
+        // document.body.appendChild(renderer.domElement);
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0xcccccc);//画布颜色
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        // scene = new THREE.Scene();//创建场景
+
+    }
+    var camera;
+    function initCamera() {
+        camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, -window.innerHeight / 2, window.innerHeight / 2, 0.1, 100000000000000000000000);
+        camera.position.set(0, 0, -10);
+        camera.up.x = 0;
+        camera.up.y = 0;
+        camera.up.z = 1;
+        // camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
+        scene.add(camera);
+
+    }
+    var scene;
+    function initScene() {
+        scene = new THREE.Scene();
+    }
+
+    function initLight() {
+        var light = new THREE.DirectionalLight(0xffffff);//光源颜色
+        // var light = new THREE.AmbientLight(0x555ff4);
+        light.position.set(-200, 100, 100);//光源位置
+        scene.add(light);//光源添加到场景中
+    }
+    function render() {
+        renderer.render(scene, camera);
+    }
+    function animate() {
+        //更新控制器
+        render();
+        requestAnimationFrame(animate);
+    }
+    function draw() {
+        initRender();
+        initScene();
+        initCamera();
+        initLight();
+        animate();
+        var controls = new THREE.TrackballControls(camera);
+        var objects = [];
+        objects.push( new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) ));
+        var dragControls = new THREE.DragControls( objects, camera, renderer.domElement );
+        dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
+        dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
+    }
+
+</script>
+</html>

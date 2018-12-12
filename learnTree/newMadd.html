@@ -155,10 +155,11 @@
                                 //child.geometry.center();
                                 // 干涉纪录
                                 let errorRecord = [];
-                                position = {x:xyzP.x, y:xyzP.y, z:xyzP.z};
+                                position = {x:xyzP.x, y:xyzP.y, z:center.z};
                                 record.push({index: i, radius: radius, position: position  ,zPosition: xyzP.z});
-                                for (let j = 0; j<record.length; j++) {
-                                   if (twoPointDistance3D(record[j].position, center) <= (radius+record[j].radius)/2) {
+                               // console.log(record.length);
+                                for (let j = 0; j<record.length - 1; j++) {
+                                   if (twoPointDistance3D(record[j].position, position) <= (radius+record[j].radius)/2) {
                                        let temp = {
                                            index: record[j].index,
                                            radius: record[j].radius,
@@ -174,10 +175,7 @@
                                     let position = {x:xyzP.x, y:xyzP.y, z:xyzP.z};
                                     record.push({index: i, radius: radius, position: position  ,zPosition: xyzP.z});
                                 }else{
-                                    errorRecord.reduce((num1, num2) => {
-                                        return num1.radius > num2.radius ? num1 : num2}
-                                    );
-                                    console.log(errorRecord);
+
                                 }
                             }
                         }

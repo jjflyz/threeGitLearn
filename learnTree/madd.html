@@ -125,6 +125,7 @@
                         child.geometry.computeBoundingSphere();
                         let maxRadius = obj.children[0].geometry.boundingSphere.radius;
                         setTimeout(null, 10);
+                        console.log(child);
                         child.scale.set(0.03, 0.03, 0.03);
                         // console.log(child.geometry.boundingSphere);
                         //explore(null, child.geometry);
@@ -172,7 +173,7 @@
                                             color: 0xffff00 * Math.random(),
                                             wireframe: true
                                         }));
-                                    child.geometry.center();
+                                   // child.geometry.center();
                                     child.position.set(xyzP.x, xyzP.y, xyzP.z);
                                     sphere.position.set(xyzP.x, xyzP.y, xyzP.z);
                                     scene.add(sphere);
@@ -187,7 +188,7 @@
                                             //         break;
                                             //     }
                                             // }
-                                            console.log('dsfsdf');
+                                            //console.log('dsfsdf');
                                             // xyzP.z += (record[j].radius + radius)*0.03/2;
                                             //child.geometry.center();
                                             child.position.set(xyzP.x, xyzP.y, xyzP.z+100);
